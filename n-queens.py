@@ -1,20 +1,18 @@
 
-n = 12
+n = 8
 
-def try_queen(n, board, col):
+def try_queen(n, board):
     count = 0
     for line in range(n):
-        board[col] = line
-        if verify(board, col):
-            if col + 1 == n:
+        if verify(board + [line]):
+            if len(board) + 1 == n:
                 count += 1
             else:
-                count += try_queen(n, board, col + 1)
+                count += try_queen(n, board + [line])
     return count
 
-def verify(all_board, col):
+def verify(board):
     # all on distinct lines
-    board = all_board[:col+1]
     if len(set(board)) < len(board):
         return False
     last_line, last_col = len(board) - 1, board[-1]
@@ -24,7 +22,7 @@ def verify(all_board, col):
             return False
     return True
 
-board = [None] * n
-count = try_queen(n, board, 0)
+board = []
+count = try_queen(n, board)
 print count
 
