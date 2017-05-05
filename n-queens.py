@@ -5,25 +5,27 @@ from multiprocessing import Pool
 import sys
 
 # board structure is represented as an array
-# line, column = index, board[index]
+# column = index
+# line = board[index]
 
 def try_queen(n, board):
     count = 0
     for line in range(n):
-        if verify(board + [line]):
-            if len(board) + 1 == n:
+        board_new_queen = board + [line]
+        if verify(board_new_queen):
+            if len(board_new_queen) == n:
                 count += 1
             else:
-                count += try_queen(n, board + [line])
+                count += try_queen(n, board_new_queen)
     return count
 
 def verify(board):
+    last_line, last_col = board[-1], len(board) - 1
     # all on distinct lines
     if len(set(board)) < len(board):
         return False
-    last_line, last_col = len(board) - 1, board[-1]
     # all on distinct diagonals
-    for line, col in enumerate(board[:-1]):
+    for col, line in enumerate(board[:-1]):
         if abs(last_line - line) == abs(last_col - col):
             return False
     return True
