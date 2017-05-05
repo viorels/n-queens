@@ -46,6 +46,10 @@ func abs(i int) int {
 	}
 }
 
+func co_try_queen(n int, board []int, count chan int) {
+	count <- try_queen(n, board)
+}
+
 func main() {
 	n := 8
 	if len(os.Args) > 1 {
@@ -53,7 +57,17 @@ func main() {
 			n = i
 		}
 	}
-	board := make([]int, 0, n)
-	count := try_queen(n, board)
+
+	count_chan := make(chan int)
+	for line := 0; line < n; line++ {
+		board := make([]int, 1, n)
+		board[0] = line
+		go co_try_queen(n, board, count_chan)
+	}
+
+	count := 0
+	for line := 0; line < n; line++ {
+		count += <-count_chan
+	}
 	fmt.Println(count)
 }
