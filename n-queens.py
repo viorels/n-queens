@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from multiprocessing import Process, Queue
+from multiprocessing import Pool
 
 n = 12
 
@@ -25,24 +25,9 @@ def verify(board):
             return False
     return True
 
-def run_and_return_to_queue(q, f, *args):
-    ret = f(*args)
-    q.put(ret)
-
-process_list = []
-q = Queue()
-
-for line in range(n):
-    board = [line]
-    p = Process(target=run_and_return_to_queue, args=(q, try_queen, n, board))
-    p.start()
-    process_list.append(p)
-
-for p in process_list: 
-    p.join()
-
-count = 0
-while not q.empty():
-    count += q.get()
-print(count)
+if __name__ == '__main__':
+    with Pool(2) as pool:
+        results = [pool.apply_async(try_queen, (n, [line])) for line in range(n)]
+        count = sum(res.get() for res in results)
+        print(count)
 
