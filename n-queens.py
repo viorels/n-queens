@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 from __future__ import print_function
-
 from multiprocessing import Pool
+import sys
 
-n = 12
+# board structure is represented as an array
+# line, column = index, board[index]
 
 def try_queen(n, board):
     count = 0
@@ -26,6 +29,7 @@ def verify(board):
     return True
 
 if __name__ == '__main__':
+    n = int(sys.argv[1]) if len(sys.argv) > 1 else 8
     with Pool(2) as pool:
         results = [pool.apply_async(try_queen, (n, [line])) for line in range(n)]
         count = sum(res.get() for res in results)
