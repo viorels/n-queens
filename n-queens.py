@@ -1,7 +1,6 @@
 from __future__ import print_function
 
-from threading import Thread
-from queue import Queue
+from multiprocessing import Process, Queue
 
 n = 12
 
@@ -30,17 +29,17 @@ def run_and_return_to_queue(q, f, *args):
     ret = f(*args)
     q.put(ret)
 
+process_list = []
 q = Queue()
-threads_list = []
 
 for line in range(n):
     board = [line]
-    t = Thread(target=run_and_return_to_queue, args=(q, try_queen, n, board))
-    t.start()
-    threads_list.append(t)
+    p = Process(target=run_and_return_to_queue, args=(q, try_queen, n, board))
+    p.start()
+    process_list.append(p)
 
-for t in threads_list:
-    t.join()
+for p in process_list: 
+    p.join()
 
 count = 0
 while not q.empty():
