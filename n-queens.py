@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 n = 8
 
@@ -24,5 +25,5 @@ def verify(board):
 
 board = []
 count = try_queen(n, board)
-print count
+print(count)
 
