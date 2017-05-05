@@ -30,8 +30,7 @@ func try_queen(n int, board []int) (int) {
 func verify(board []int) (bool) {
     last_col := len(board) - 1
     last_line := board[last_col]
-    for col := 0; col < last_col; col++ {
-        line := board[col]
+    for col, line := range board[:last_col] {
         if line == last_line || abs(last_line - line) == abs(last_col - col) {
             return false
         }
@@ -54,7 +53,7 @@ func main() {
             n = i
         }
     }
-    board := make([]int, n)
-    count := try_queen(n, board[:0])
+    board := make([]int, 0, n)
+    count := try_queen(n, board)
     fmt.Println(count)
 }
